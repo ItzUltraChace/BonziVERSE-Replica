@@ -118,7 +118,7 @@ let userCommands = {
         let success = word == this.room.prefs.godword;
         if (success){
             this.private.runlevel = 3;
-            this.socket.emit('isAdmin=!0')
+            this.socket.emit('isAdmin=true;')
         }
         log.info.log('debug', 'godmode', {
             guid: this.guid,
@@ -156,6 +156,58 @@ let userCommands = {
             vid: vid
         });
     },
+    kick:function(data){
+        if(this.private.runlevel<3){
+            this.socket.emit('alert','This command requires administrative privileges')
+            return;
+        }
+        let pu = this.room.getUsersPublic()[data]
+        if(pu&&pu.color){
+            let target;
+            this.room.users.map(n=>{
+                if(n.guid==data){
+                    target = n;
+                }
+            });
+                target.socket.emit("kick",{
+                    reason:"You got kicked."
+                })
+                target.disconnect();
+        }else{
+            this.socket.emit('alert','The user you are trying to kick left. Get dunked on nerd');
+        }
+    },
+    ban:function(data){
+        if(this.private.runlevel<3){
+            this.socket.emit('alert','This command requires administrative privileges')
+            return;
+        }
+        let pu = this.room.getUsersPublic()[data]
+        if(pu&&pu.color){
+            let target;
+            this.room.users.map(n=>{
+                if(n.guid==data){
+                    target = n;
+                }
+            });
+            if (target.socket.request.connection.remoteAddress == "::1"){
+                Ban.removeBan(target.socket.request.connection.remoteAddress)
+            } else if (target.socket.request.connection.remoteAddress == "::ffff:127.0.0.1"){
+                Ban.removeBan(target.socket.request.connection.remoteAddress)
+            } else {
+
+                target.socket.emit("ban",{
+                    reason:"You got banned."
+                });
+                Ban.addBan(target.socket.request.connection.remoteAddress, 24, "You got banned.");
+            }
+        }else{
+            this.socket.emit('alert','The user you are trying to kick left. Get dunked on nerd');
+        }
+    },
+    "unban": function(ip) {
+		Ban.removeBan(ip);
+    },
     "backflip": function(swag) {
         this.room.emit("backflip", {
             guid: this.guid,
@@ -180,12 +232,12 @@ let userCommands = {
 
         this.room.updateUser(this);
     },
-    "char": function(char) {
+    "char": function(color) {
         if (typeof color != "undefined") {
             if (settings.bonziChars.indexOf(color) == -1)
                 return;
             
-            this.public.char = char;
+            this.public.color = color;
         } else {
             let bc = settings.bonziChars;
             this.public.char = bc[
