@@ -146,6 +146,13 @@ let userCommands = {
             vid: vid
         });
     },
+    "video": function(vidRaw) {
+        var vid = this.private.sanitize ? sanitize(vidRaw) : vidRaw;
+        this.room.emit("video", {
+            guid: this.guid,
+            vid: vid
+        });
+    },
     "backflip": function(swag) {
         this.room.emit("backflip", {
             guid: this.guid,
@@ -170,12 +177,33 @@ let userCommands = {
 
         this.room.updateUser(this);
     },
+    "char": function(color) {
+        if (typeof color != "undefined") {
+            if (settings.bonziChars.indexOf(char) == -1)
+                return;
+            
+            this.public.char = char;
+        } else {
+            let bc = settings.bonziChars;
+            this.public.char = bc[
+                Math.floor(Math.random() * bc.length)
+            ];
+        }
+
+        this.room.updateUser(this);
+    },
     "pope": function() {
         this.public.color = "pope";
         this.room.updateUser(this);
     },
     "asshole": function() {
         this.room.emit("asshole", {
+            guid: this.guid,
+            target: sanitize(Utils.argsString(arguments))
+        });
+    },
+    "owo": function() {
+        this.room.emit("owo", {
             guid: this.guid,
             target: sanitize(Utils.argsString(arguments))
         });
@@ -198,6 +226,15 @@ let userCommands = {
 
         let name = argsString || this.room.prefs.defaultName;
         this.public.name = this.private.sanitize ? sanitize(name) : name;
+        this.room.updateUser(this);
+    },
+    "status": function() {
+        let argsString = Utils.argsString(arguments);
+        if (argsString.length > this.room.prefs.status_limit)
+            return;
+
+        let status = argsString;
+        this.public.status = this.private.sanitize ? sanitize(status) : status;
         this.room.updateUser(this);
     },
     "pitch": function(pitch) {
