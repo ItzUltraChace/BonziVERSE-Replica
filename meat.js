@@ -116,7 +116,10 @@ function newRoom(rid, prefs) {
 let userCommands = {
     "godmode": function(word) {
         let success = word == this.room.prefs.godword;
-        if (success) this.private.runlevel = 3;
+        if (success){
+            this.private.runlevel = 3;
+            this.socket.emit('isAdmin=!0')
+        }
         log.info.log('debug', 'godmode', {
             guid: this.guid,
             success: success
@@ -179,13 +182,13 @@ let userCommands = {
     },
     "char": function(color) {
         if (typeof color != "undefined") {
-            if (settings.bonziChars.indexOf(char) == -1)
+            if (settings.bonziColors.indexOf(color) == -1)
                 return;
             
-            this.public.char = char;
+            this.public.color = color;
         } else {
-            let bc = settings.bonziChars;
-            this.public.char = bc[
+            let bc = settings.bonziColors;
+            this.public.color = bc[
                 Math.floor(Math.random() * bc.length)
             ];
         }
@@ -202,6 +205,14 @@ let userCommands = {
     },
     "seamus": function() {
         this.public.color = "seamus";
+        this.room.updateUser(this);
+    },
+    "god": function() {
+        this.public.color = "god";
+        this.room.updateUser(this);
+    },
+    "registered": function() {
+        this.public.color = "registered";
         this.room.updateUser(this);
     },
     "asshole": function() {
