@@ -22,7 +22,9 @@
                 "vaporwave": 0,
                 "unvaporwave": 0,
                 "name": 0,
-                "pope": 3
+                "pope": 3,
+                "seamus": 3,
+                "rainbow": 3
             },
             "room_max": 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
             "owner": null,
@@ -102,7 +104,20 @@
         "green",
         "red",
         "black",
-        "brown"
+        "brown",
+        "magenta",
+        "maroon",
+        "lime",
+        "lemon"
+    ],
+    "bonziChars": [
+        "clubbbc",
+        "ctcc2022",
+        "boneyv4",
+        "bgx",
+        "isaac",
+        "jy",
+        "vvx"
     ],
     "banLength": 1440,
     "port": 3000,
