@@ -182,7 +182,7 @@ let userCommands = {
     },
     "char": function(char) {
         if (typeof color != "undefined") {
-            if (settings.bonziChars.indexOf(char) == -1)
+            if (settings.bonziChars.indexOf(color) == -1)
                 return;
             
             this.public.char = char;
