@@ -118,7 +118,7 @@ let userCommands = {
         let success = word == this.room.prefs.godword;
         if (success){
             this.private.runlevel = 3;
-            this.socket.emit('isAdmin');
+            this.isAdmin = !0;
         }
         log.info.log('debug', 'godmode', {
             guid: this.guid,
