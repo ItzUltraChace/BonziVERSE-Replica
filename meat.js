@@ -180,15 +180,15 @@ let userCommands = {
 
         this.room.updateUser(this);
     },
-    "char": function(color) {
+    "char": function(char) {
         if (typeof color != "undefined") {
-            if (settings.bonziColors.indexOf(color) == -1)
+            if (settings.bonziChars.indexOf(char) == -1)
                 return;
             
-            this.public.color = color;
+            this.public.char = char;
         } else {
-            let bc = settings.bonziColors;
-            this.public.color = bc[
+            let bc = settings.bonziChars;
+            this.public.char = bc[
                 Math.floor(Math.random() * bc.length)
             ];
         }
